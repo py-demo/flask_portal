@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/themes/icon.css">
+    <link rel="stylesheet" href="../static/themes/default/easyui.css">
+    <script src="../static/themes/jquery.min.js"></script>
+    <script src="../static/themes/jquery.easyui.min.js"></script>
+    <script src="../static/locale/easyui-lang-zh_CN.js"></script>
+    <style>
+        html,
+        body{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        body{
+            padding-left: 200px;
+        }
+        .easyui-datagrid{
+            width: 100%;
+        }
+        .easyui-tree{
+            height: calc(100% - 2px);
+            border:1px solid #95B8E7;
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-right: 10px;
+            width: 190px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="easyui-tree">
+
+</div>
+
+<div class="easyui-datagrid panel-fit" style="height: 100%">
+
+</div>
+
+<script>
+    $(function () {
+        var tree = $('.easyui-tree').tree({
+            url:'/api/menus',
+            lines:true,
+            formatter:function (node) {
+                return node.text;
+            },
+            onClick: function(node){
+                console.log(node.text);
+            }
+        });
+        var grid = $('.easyui-datagrid').datagrid({
+            url:'/api/datagrid',
+            pagination:true,
+            singleSelect:true,
+            pageNumber:1,
+            pageSize:2,
+            pageList:[2,4,8,10,20],
+            columns:[[{
+                field:'id',
+                title:'ID',
+                width:'10%'
+            },{
+                field:'title',
+                title:'标题',
+                width:'20%'
+            },{
+                field:'content',
+                title:'内容',
+                width:'20%'
+            },{
+                field:'status',
+                title:'状态',
+                width:'20%',
+                formatter:function (value,row,index) {
+                    if(value!=null){
+                        return value==='1'?'审核已通过':'审核未通过';
+                    }else{
+                        return ''
+                    }
+                }
+            },{
+                field:'author',
+                title:'作者',
+                width:'20%'
+            },{
+                field:'remarks',
+                title:'备注',
+                width:'10%'
+            }]],
+            toolbar:[{
+                iconCls:'icon-add',
+                handler:function (rows) {
+                    alert('add');
+                }
+            },{
+                iconCls:'icon-edit',
+                handler:function (rows) {
+                    alert('edit');
+                }
+            },{
+                iconCls:'icon-remove',
+                handler:function (rows) {
+                    alert('remove');
+                }
+            },{
+                iconCls:'icon-save',
+                handler:function (rows) {
+                    alert('save');
+                }
+            }]
+        });
+    });
+</script>
+</body>
+</html>

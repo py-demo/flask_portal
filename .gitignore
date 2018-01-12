@@ -1,0 +1,5 @@
+# git rm --cached
+venv/
+venv2/
+venv3/
+.idea/

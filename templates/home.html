@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>信息管理界面</title>
+    <link rel="stylesheet" href="../static/themes/icon.css">
+    <link rel="stylesheet" href="../static/themes/default/easyui.css" id="style">
+    <link rel="stylesheet" href="../static/themes/app.css">
+</head>
+<body class="easyui-layout">
+
+<div class="home-header" data-options="region:'north'">
+    <div class="home-logo">
+        <img src="../static/themes/icons/logo.png" alt="信息管理界面">
+    </div>
+
+    <div class="home-navs">
+        <a href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search'">物流系统</a>
+        <a href="javascript:;" class="easyui-menubutton" data-options="iconCls:'icon-search',menu:'#mm1'">巡检系统</a>
+        <a href="javascript:;" class="easyui-menubutton" data-options="iconCls:'icon-search',menu:'#mm2'">硬件系统</a>
+        <a href="javascript:;" class="easyui-menubutton" data-options="iconCls:'icon-search',menu:'#mm1'">物流系统</a>
+        <a href="javascript:;" class="easyui-menubutton" data-options="iconCls:'icon-search',menu:'#mm2'">巡检系统</a>
+        <a href="javascript:;" class="easyui-menubutton" data-options="iconCls:'icon-search',menu:'#mm1'">硬件系统</a>
+    </div>
+
+    <div class="home-toolbar">
+        <ul>
+            <li><a class="easyui-menubutton" href="javascript:;" data-options="menu:'#nav'">切换主题</a></li>
+            <li><a href="/login">登陆</a></li>
+            <li><a href="javascript:;">退出</a></li>
+        </ul>
+        <ul class="login-info">
+            <li><a href="javascript:;">管理员：admin</a></li>
+            <li><a href="javascript:;">消息：5</a></li>
+        </ul>
+    </div>
+
+    <div id="nav" class="easyui-menu">
+        <div>default</div>
+        <div>bootstrap</div>
+    </div>
+    <div id="mm1" style="width:150px;">
+		<div data-options="iconCls:'icon-undo'">Undo</div>
+		<div data-options="iconCls:'icon-redo'">Redo</div>
+		<div class="menu-sep"></div>
+		<div>Cut</div>
+		<div>Copy</div>
+		<div class="menu-sep"></div>
+		<div>
+			<span>Toolbar</span>
+			<div>
+				<div>Address</div>
+				<div>Link</div>
+				<div class="menu-sep"></div>
+				<div>New Toolbar...</div>
+			</div>
+		</div>
+		<div data-options="iconCls:'icon-remove'">Delete</div>
+	</div>
+	<div id="mm2" style="width:100px;">
+		<div>Help</div>
+		<div>Update</div>
+		<div>About</div>
+	</div>
+</div>
+
+<div class="home-sidebar" data-options="region:'west'">
+    <div class="home-accordion easyui-accordion" data-options="border:0">
+        <div class="accordion-title" title="系统设置" data-options="iconCls:'icon-save'">
+            <ul class="home-menu">
+                <li>
+                    <i class="panel-icon icon-menu"></i>
+                    <a href="/menus">菜单维护</a>
+                </li>
+                <li>
+                    <i class="panel-icon icon-avatar"></i>
+                    <a href="/menus">用户维护</a>
+                </li>
+                <li>
+                    <i class="panel-icon icon-section"></i>
+                    <a href="/menus">部门维护</a>
+                </li>
+                <li>
+                    <i class="panel-icon icon-job"></i>
+                    <a href="/menus">岗位维护</a>
+                </li>
+                <li>
+                    <i class="panel-icon icon-tpl"></i>
+                    <a href="/menus">模版维护</a>
+                </li>
+            </ul>
+        </div>
+        <div class="accordion-title" title="权限管理" data-options="iconCls:'icon-save'">
+            <ul class="home-menu">
+                <li>
+                    <i class="panel-icon icon-menu"></i>
+                    <a href="/menus">菜单维护</a>
+                </li>
+                <li>
+                    <i class="panel-icon icon-avatar"></i>
+                    <a href="/menus">用户维护</a>
+                </li>
+                <li>
+                    <i class="panel-icon icon-section"></i>
+                    <a href="/menus">部门维护</a>
+                </li>
+                <li>
+                    <i class="panel-icon icon-job"></i>
+                    <a href="/menus">岗位维护</a>
+                </li>
+                <li>
+                    <i class="panel-icon icon-tpl"></i>
+                    <a href="/menus">模版维护</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="home-content" data-options="region:'center'">
+    <div class="easyui-tabs" data-options="fit:true">
+        <div title="菜单维护">
+            <iframe src="/menus" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+    </div>
+</div>
+
+
+<script src="../static/themes/jquery.min.js"></script>
+<script src="../static/themes/jquery.easyui.min.js"></script>
+<script src="../static/locale/easyui-lang-zh_CN.js"></script>
+<script>
+    $(function () {
+        // control + g
+        var nav = $('#nav');
+        var tabs = $('.easyui-tabs');
+        var ul = $('.home-menu');
+
+        nav.menu({
+            onClick: function (item) {
+                var text = item.text;
+                var style = $('#style');
+                style.attr('href', 'themes/' + text + '/easyui.css');
+            }
+        });
+
+        ul.on('click', 'a', function (ev) {
+            ul.find('li').removeClass('active');
+            $(this).parent().addClass('active');
+
+            var url = $(this).attr('href');
+            var title = $(this).text();
+
+            if (tabs.tabs('exists', title)) {
+                tabs.tabs('select', title)
+            } else {
+                tabs.tabs('add', {
+                    title: title,
+                    closable: true,
+                    content: '<iframe src="' + url + '" width="100%" height="100%" frameborder="0"></iframe>'
+                })
+            }
+            return false;
+        });
+    });
+</script>
+</body>
+</html>
