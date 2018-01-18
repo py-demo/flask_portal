@@ -47,7 +47,7 @@ new_user = User(
 # session.add(new_user)
 # session.commit()
 
-rows = session.execute('select * from eis_user').fetchall()
+rows = session.execute("select * from eis_user").fetchall()
 row = session.execute("select * from eis_user where ename_='zhangSan'").first()
 
 print row

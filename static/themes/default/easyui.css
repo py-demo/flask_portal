@@ -1627,7 +1627,7 @@
   border-left: 1px solid #ffffff;
 }
 .tabs-header .tabs-pill li.tabs-selected a.tabs-inner {
-  background: #ffe48d;
+  background: #eaf2ff;
   color: #000000;
   filter: none;
   border-color: #95B8E7;
@@ -1911,7 +1911,7 @@
   cursor: default;
 }
 .datagrid-row-selected {
-  background: #ffe48d;
+  background: #eaf2ff;
   color: #000000;
 }
 .datagrid-row-editing .textbox,

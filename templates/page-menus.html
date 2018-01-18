@@ -7,25 +7,70 @@
     <link rel="stylesheet" href="../static/themes/default/easyui.css">
     <style>
         html,
-        body{
+        body {
             margin: 0;
             padding: 0;
             height: 100%;
         }
-        body{
+
+        body {
             padding-left: 200px;
         }
-        .easyui-datagrid{
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .easyui-datagrid {
             width: 100%;
         }
-        .easyui-tree{
+
+        .easyui-tree {
             height: calc(100% - 2px);
-            border:1px solid #95B8E7;
+            border: 1px solid #95B8E7;
             position: absolute;
             left: 0;
             top: 0;
             margin-right: 10px;
             width: 190px;
+        }
+
+        .easyui-dialog {
+            width: 600px;
+            padding: 30px 40px 20px;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .form-item {
+            width: 48%;
+            padding-bottom: 30px;
+            position: relative;
+        }
+
+        .form-label {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 34px;
+            text-indent: 8px;
+            font-size: 14px;
+            transition: .3s;
+            border-radius: 0;
+            background-color: #f4f7f9;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            border: none;
+            outline: none;
         }
     </style>
 </head>
@@ -39,82 +84,189 @@
 
 </div>
 
+
+<div id="dialog" class="easyui-dialog">
+    <form method="post" id="form">
+        <div class="form-item left">
+            <div class="form-label">标题：</div>
+            <input class="form-input" type="text" name="title" data-options="required:true">
+        </div>
+
+        <div class="form-item right">
+            <div class="form-label">内容：</div>
+            <input class="form-input" type="text" name="content" data-options="required:true">
+        </div>
+
+        <div class="form-item left">
+            <div class="form-label">作者：</div>
+            <input class="form-input" type="text" name="author" data-options="required:true">
+        </div>
+
+        <div class="form-item right">
+            <div class="form-label">评论：</div>
+            <input class="form-input" type="text" name="remarks" data-options="required:true">
+        </div>
+
+        <div class="form-item left">
+            <div class="form-label">状态：</div>
+            <select class="form-input" name="status" data-options="required:true">
+                <option value="" disabled>是否可用</option>
+                <option value="1">可用</option>
+                <option value="0">不可用</option>
+            </select>
+        </div>
+    </form>
+</div>
+
 <script src="../static/js/jquery.min.js"></script>
 <script src="../static/js/jquery.easyui.min.js"></script>
 <script src="../static/locale/easyui-lang-zh_CN.js"></script>
 <script>
     $(function () {
+        var dialog = $('#dialog');
+        var form = $('#form');
+        var rowEditor = undefined;
+
+        // 隐藏弹窗
+        dialog.dialog('close');
+
         var tree = $('.easyui-tree').tree({
-            url:'/api/menus',
-            lines:true,
-            formatter:function (node) {
+            url: '/api_menus',
+            lines: true,
+            formatter: function (node) {
                 return node.text;
             },
-            onClick: function(node){
+            onClick: function (node) {
                 console.log(node.text);
             }
         });
+
         var grid = $('.easyui-datagrid').datagrid({
-            url:'/api/datagrid',
-            pagination:true,
-            singleSelect:true,
-            pageNumber:1,
-            pageSize:2,
-            pageList:[2,4,8,10,20],
-            columns:[[{
-                field:'id',
-                title:'ID',
-                width:'10%'
-            },{
-                field:'title',
-                title:'标题',
-                width:'20%'
-            },{
-                field:'content',
-                title:'内容',
-                width:'20%'
-            },{
-                field:'status',
-                title:'状态',
-                width:'20%',
-                formatter:function (value,row,index) {
-                    if(value!=null){
-                        return value==='1'?'审核已通过':'审核未通过';
-                    }else{
+            url: '/api_datagrid',
+            pagination: true,
+            singleSelect: true,
+            pageNumber: 1,
+            pageSize: 2,
+            pageList: [2, 4, 8, 10, 20],
+            columns: [[{
+                field: 'id',
+                title: 'ID',
+                width: '10%'
+            }, {
+                field: 'title',
+                title: '标题',
+                width: '20%'
+            }, {
+                field: 'content',
+                title: '内容',
+                width: '20%'
+            }, {
+                field: 'status',
+                title: '状态',
+                width: '20%',
+                formatter: function (value, row, index) {
+                    if (value != null) {
+                        return value === '1' ? '审核已通过' : '审核未通过';
+                    } else {
                         return ''
                     }
                 }
-            },{
-                field:'author',
-                title:'作者',
-                width:'20%'
-            },{
-                field:'remarks',
-                title:'备注',
-                width:'10%'
+            }, {
+                field: 'author',
+                title: '作者',
+                width: '20%'
+            }, {
+                field: 'remarks',
+                title: '备注',
+                width: '10%'
             }]],
-            toolbar:[{
-                iconCls:'icon-add',
-                handler:function (rows) {
-                    alert('add');
+            toolbar: [{
+                iconCls: 'icon-add',
+                text: '添加记录',
+                handler: function (rows) {
+
+                    console.log({
+                        author: "33",
+                        content: "22",
+                        createdAt: "2017-12-03T11:15:52.000Z",
+                        remarks: "666",
+                        status: "1",
+                        title: "这是标题11",
+                        updatedAt: "2017-12-03T11:15:52.000Z"
+                    });
+
+                    dialog.dialog('open');
+                    dialog.dialog({
+                        title: '弹窗框',
+                        iconCls: 'icon-save',
+                        buttons: [{
+                            text: '保存',
+                            iconCls: 'icon-save',
+                            handler: function () {
+                                form.form('submit');
+                            }
+                        }, {
+                            text: '取消',
+                            iconCls: 'icon-remove',
+                            handler: function () {
+                                dialog.dialog('close');
+                            }
+                        }]
+                    });
                 }
-            },{
-                iconCls:'icon-edit',
-                handler:function (rows) {
-                    alert('edit');
+            }, {
+                iconCls: 'icon-edit',
+                text: '修改记录',
+                handler: function () {
+                    dialog.dialog({
+                        title: '保存',
+                        iconCls: 'icon-save',
+                        buttons: [{
+                            text: 'Ok',
+                            iconCls: 'icon-save',
+                            handler: function () {
+                                form.form('submit');
+                            }
+                        }, {
+                            text: '取消',
+                            iconCls: 'icon-remove',
+                            handler: function () {
+                                dialog.dialog('close');
+                            }
+                        }]
+                    });
+
+                    // 是否选中数据
+                    if (grid.datagrid('getSelected')) {
+                        var row = grid.datagrid('getSelected');
+                        dialog.dialog('open');
+                        row.status === '1' ? row.status = '审核已通过' : row.status = '审核未通过';
+                        form.form('load', row);// 填充表单
+                    } else {
+                        dialog.dialog('close');
+                        alert('请选择一条数据！');
+                    }
                 }
-            },{
-                iconCls:'icon-remove',
-                handler:function (rows) {
+            }, {
+                iconCls: 'icon-remove',
+                text: '移除记录',
+                handler: function (rows) {
                     alert('remove');
-                }
-            },{
-                iconCls:'icon-save',
-                handler:function (rows) {
-                    alert('save');
                 }
             }]
         });
+
+        // 新增数据
+        form.form('submit', {
+            url: '/form',
+            onSubmit: function () {
+                return form.form('validate');
+            },
+            success: function (data) {
+                console.log(data);
+            }
+        });
+
     });
 </script>
 </body>
