@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/themes/icon.css">
+    <link rel="stylesheet" href="../static/themes/default/easyui.css">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            padding-left: 200px;
+        }
+
+        .easyui-tree {
+            height: calc(100% - 2px);
+            border: 1px solid #95B8E7;
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-right: 10px;
+            width: 190px;
+        }
+
+        .form-item {
+            width: 98%;
+            padding-bottom: 30px;
+            position: relative;
+        }
+
+        .form-label {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 24px;
+            text-indent: 8px;
+            font-size: 14px;
+            transition: .3s;
+            border-radius: 0;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="easyui-tree">
+
+</div>
+
+<form method="post" id="form">
+    <table class="table">
+        <tr>
+            <td width="10%">
+                <div class="form-label">名称：</div>
+            </td>
+            <td width="70%"><input class="form-input" type="text" name="title" data-options="required:true"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-label">是否用于导航：</div>
+            </td>
+            <td>
+                <select name="select" data-options="required:true">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-label">URL：</div>
+            </td>
+            <td><input class="form-input" type="text" name="author" data-options="required:true"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-label">图标：</div>
+            </td>
+            <td><input class="form-input" type="text" name="remarks" data-options="required:true"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-label">描述：</div>
+            </td>
+            <td>
+                <textarea class="form-input" name="desc" data-options="required:true" rows="30"></textarea>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/jquery.easyui.min.js"></script>
+<script src="../static/locale/easyui-lang-zh_CN.js"></script>
+<script>
+    $(function () {
+        var dialog = $('#dialog');
+        var form = $('#form');
+        var rowEditor = undefined;
+
+        // 隐藏弹窗
+        // dialog.dialog('close');
+
+        // 树形菜单
+        var tree = $('.easyui-tree').tree({
+            url: '/api_menus',
+            lines: true,
+            formatter: function (node) {
+                return node.text;
+            },
+            onClick: function (node) {
+                console.log(node.text);
+                console.log(node.attributes.url);
+
+                grid.datagrid("options").url = node.attributes.url;
+                grid.datagrid("load");
+            }
+        });
+
+        // 获取按钮
+        var newUser = $('#newUser');
+        var editUser = $('#editUser');
+
+        // 添加记录
+        newUser.on('click', function () {
+            dialog.dialog('open');// open
+            dialog.dialog({
+                title: '添加记录',
+                iconCls: 'icon-save',
+                buttons: [{
+                    text: '保存',
+                    iconCls: 'icon-save',
+                    handler: function () { // 新增数据
+                        form.form('submit', {
+                            url: '/form',
+                            onSubmit: function () {
+                                return form.form('validate');
+                            },
+                            success: function (data) {
+                                dialog.dialog('close');// close
+                                console.log(data);
+                            }
+                        });
+                    }
+                }, {
+                    text: '取消',
+                    iconCls: 'icon-remove',
+                    handler: function () {
+                        dialog.dialog('close');// close
+                    }
+                }]
+            });
+        });
+
+        // 修改记录
+        editUser.on('click', function () {
+            dialog.dialog({
+                title: '修改记录',
+                iconCls: 'icon-save',
+                buttons: [{
+                    text: '保存',
+                    iconCls: 'icon-save',
+                    handler: function () {// 保存修改
+                        form.form('submit', {
+                            url: '/form',
+                            onSubmit: function () {
+                                return form.form('validate');
+                            },
+                            success: function (data) {
+                                dialog.dialog('close');// close
+                                console.log(data);
+                            }
+                        });
+                    }
+                }, {
+                    text: '取消',
+                    iconCls: 'icon-remove',
+                    handler: function () {
+                        dialog.dialog('close');// close
+                    }
+                }]
+            });
+
+            // 修改选中的数据行
+            if (grid.datagrid('getSelected')) {
+                dialog.dialog('open');// open
+                var row = grid.datagrid('getSelected');
+
+                row.status === '1' ? row.status = '审核已通过' : row.status = '审核未通过';
+
+                form.form('load', row); // 填充表单
+
+                console.log({
+                    author: "33",
+                    content: "22",
+                    createdAt: "2017-12-03T11:15:52.000Z",
+                    remarks: "666",
+                    status: "1",
+                    title: "这是标题11",
+                    updatedAt: "2017-12-03T11:15:52.000Z"
+                });
+            } else {
+                dialog.dialog('close');// close
+                alert('请选择一条数据！');
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>

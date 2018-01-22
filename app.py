@@ -1,5 +1,5 @@
 # coding:utf8
-from flask import Flask, render_template, json, jsonify
+from flask import Flask, render_template, Request, json, jsonify
 from test.api_menus import menu
 from test.api_datagrid import datagrid
 
@@ -18,7 +18,7 @@ def home():
 
 @app.route('/menus', methods=['POST', 'GET'])
 def menus():
-    return render_template('page-menus.html')
+    return render_template('page-menu.html')
 
 
 @app.route('/api_datagrid', methods=['POST', 'GET'])
@@ -30,9 +30,14 @@ def api_datagrid():
 def api_menus():
     return jsonify(menu)
 
+
 @app.route('/form', methods=['POST', 'GET'])
 def form():
-    return ''
+    return jsonify({
+        'code': 200,
+        'msg': '数据保存成功！',
+        'data': []
+    })
 
 
 if __name__ == "__main__":
