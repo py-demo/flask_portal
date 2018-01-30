@@ -74,7 +74,7 @@
                 </li>
                 <li>
                     <i class="panel-icon icon-avatar"></i>
-                    <a href="/menus">用户维护</a>
+                    <a href="/list">用户维护</a>
                 </li>
                 <li>
                     <i class="panel-icon icon-section"></i>
@@ -136,13 +136,13 @@
         var ul = $('.home-menu');
         var tabs = $('.easyui-tabs');
 
-        nav.menu({
+        {#nav.menu({
             onClick: function (item) {
                 var text = item.text;
                 var style = $('#style');
                 style.attr('href', 'themes/' + text + '/easyui.css');
             }
-        });
+        });#}
 
         ul.on('click', 'a', function (ev) {
             ul.find('li').removeClass('active');

@@ -12,31 +12,12 @@
             padding: 0;
             height: 100%;
         }
-
-        body {
-            padding-left: 200px;
-        }
-
         .left {
             float: left;
         }
 
         .right {
             float: right;
-        }
-
-        .easyui-datagrid {
-            width: 100%;
-        }
-
-        .easyui-tree {
-            height: calc(100% - 2px);
-            border: 1px solid #95B8E7;
-            position: absolute;
-            left: 0;
-            top: 0;
-            margin-right: 10px;
-            width: 190px;
         }
 
         .easyui-dialog {
@@ -75,10 +56,6 @@
     </style>
 </head>
 <body>
-
-<div class="easyui-tree">
-
-</div>
 
 <div id="toolbar">
     <a href="javascript:;" class="easyui-linkbutton" iconCls="icon-add" id="newUser">添加记录</a>
@@ -178,21 +155,6 @@
             }]]
         });
 
-        // 树形菜单
-        var tree = $('.easyui-tree').tree({
-            url: '/api_menus',
-            lines: true,
-            formatter: function (node) {
-                return node.text;
-            },
-            onClick: function (node) {
-                console.log(node.text);
-                console.log(node.attributes.url);
-
-                grid.datagrid("options").url = node.attributes.url;
-                grid.datagrid("load");
-            }
-        });
 
         // 获取按钮
         var newUser = $('#newUser');
